@@ -48,6 +48,7 @@ export function createCard(topic) {
             card.style.overflow = 'auto'; // Add this line to enable scrolling
             card.querySelector('.card-more').style.display = 'none';
             card.querySelector('.card-close').style.display = 'block';
+            card.querySelector('.drag-handle-card').style.display = 'none';
             const items = Array.from(card.querySelectorAll('.card-item'));
             items.forEach(item => item.style.display = 'flex');
         } else {
@@ -60,6 +61,7 @@ export function createCard(topic) {
             card.style.overflow = '';
             card.querySelector('.card-more').style.display = 'block';
             card.querySelector('.card-close').style.display = 'none';
+            card.querySelector('.drag-handle-card').style.display = 'block';
             const items = Array.from(card.querySelectorAll('.card-item'));
             for (let i = showNum; i < items.length; i++) {
                 items[i].style.display = 'none';
@@ -79,6 +81,7 @@ export function createCard(topic) {
             card.style.transform = '';
             card.querySelector('.card-more').style.display = 'block';
             card.querySelector('.card-close').style.display = 'none';
+            card.querySelector('.drag-handle-card').style.display = 'block';
             const items = Array.from(card.querySelectorAll('.card-item'));
             for (let i = showNum; i < items.length; i++) {
                 items[i].style.display = 'none';
