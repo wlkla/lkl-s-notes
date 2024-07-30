@@ -85,20 +85,45 @@
 }
 
 .card-color-picker-container {
+    padding-top: 10px;
     position: absolute;
     right: 20px;
     display: flex;
     align-items: center;
+    height: 25px;
+    width: 70px;
 }
 
 .card-color-picker-odd,
 .card-color-picker-even {
-    background-color: transparent;
-    width: 15px;
+    width: 35px;
     height: 20px;
-    border: none;
+    padding: 0 2px;
     margin-right: 4px;
     cursor: pointer;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-color: transparent;
+    border: none;
+    outline: none;
+}
+
+.card-color-picker-odd::-webkit-color-swatch-wrapper,
+.card-color-picker-even::-webkit-color-swatch-wrapper {
+    padding: 0;
+}
+
+.card-color-picker-odd::-webkit-color-swatch,
+.card-color-picker-even::-webkit-color-swatch {
+    border: none;
+    border-radius: 50%;
+}
+
+.card-color-picker-odd::-moz-color-swatch,
+.card-color-picker-even::-moz-color-swatch {
+    border: none;
+    border-radius: 50%;
 }
 
 .card-color-picker-even {
