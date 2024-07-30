@@ -2,6 +2,7 @@ import {Octokit} from "https://esm.sh/@octokit/core";
 import {createCard, addFileToCard} from './cardUtils.js';
 import {getGitHubInfo} from './github.js';
 
+let existingTopics = [];
 
 export async function initializeCards() {
     try {
@@ -22,6 +23,7 @@ export async function initializeCards() {
             const cardContainer = document.getElementById('cardContainer');
             for (const item of response.data) {
                 if (item.type === 'dir') {
+                    existingTopics.push(item.name);
                     const card = createCard(item.name);
                     cardContainer.appendChild(card);
                     await populateCard(card, item.name);
@@ -62,4 +64,8 @@ async function populateCard(card, topicName) {
     } catch (error) {
         console.error(`Error populating card for ${topicName}:`, error);
     }
+}
+
+export function getTopics(){
+    return existingTopics;
 }

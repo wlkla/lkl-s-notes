@@ -1,7 +1,7 @@
 import {createCard, addFileToCard} from './cardUtils.js';
 import {Octokit} from 'https://cdn.skypack.dev/@octokit/core';
 import {getGitHubInfo} from './github.js';
-
+import {getTopics} from './initCards.js';
 
 export function setupFileUpload() {
     const closeButton = document.getElementById('close');
@@ -10,8 +10,11 @@ export function setupFileUpload() {
     const uploadButton = document.getElementById('uploadButton');
     const uploadForm = document.getElementById('uploadForm');
     const popupForm = document.getElementById('popupForm');
+    const topicInput = document.getElementById('topicInput');
+    const topicList = document.getElementById('topicList');
     const cardContainer = document.getElementById('cardContainer');
     let selectedFile = null;
+    let existingTopics = [];
 
     closeButton.addEventListener("click", function () {
         popupForm.style.display = "none";
@@ -62,7 +65,9 @@ export function setupFileUpload() {
 
     fileInput.addEventListener('change', function (e) {
         selectedFile = e.target.files[0];
+        updateTopicList();
         if (selectedFile) {
+            existingTopics = getTopics();
             document.getElementById('fileNameInput').value = selectedFile.name;
             popupForm.style.display = 'block';
         }
@@ -98,6 +103,8 @@ export function setupFileUpload() {
             if (!card) {
                 card = createCard(topic);
                 cardContainer.appendChild(card);
+                existingTopics.push(topic);
+                existingTopics.push(topic);
             }
 
             addFileToCard(card, topic, fileName);
@@ -108,6 +115,22 @@ export function setupFileUpload() {
             alert('上传失败：' + error.message);
         }
     });
+
+    topicInput.addEventListener('input', function () {
+        const searchTerm = topicInput.value.toLowerCase();
+        updateTopicList(searchTerm);
+    });
+
+    function updateTopicList(searchTerm = '') {
+        topicList.innerHTML = '';
+        existingTopics
+            .filter(topic => topic.toLowerCase().includes(searchTerm))
+            .forEach(topic => {
+                const option = document.createElement('option');
+                option.value = topic;
+                topicList.appendChild(option);
+            });
+    }
 
     async function readFileAsBase64(file) {
         return new Promise((resolve, reject) => {
@@ -125,13 +148,14 @@ export function setupFileUpload() {
         });
 
         const path = `${githubInfo.filePath}/${topic}/${fileName}`;
+        const note = document.getElementById('noteInput').value;
 
         try {
             await octokit.request('PUT /repos/{owner}/{repo}/contents/{path}', {
                 owner: githubInfo.username,
                 repo: githubInfo.repoName,
                 path: path,
-                message: `Add ${fileName} to ${topic}`,
+                message: note,
                 content: content,
                 headers: {
                     'X-GitHub-Api-Version': '2022-11-28'
@@ -141,7 +165,6 @@ export function setupFileUpload() {
             throw new Error('GitHub上传失败：' + error.message);
         }
     }
-
 }
 
 const style = document.createElement('style');
