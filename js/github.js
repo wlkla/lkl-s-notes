@@ -90,7 +90,7 @@ export function initGitHubBinding() {
         githubBindModal.style.display = "none";
 
         if (saveResult.success) {
-            alert("登录成功！");
+            alert("登录成功，但无法确定密钥是否有效！");
             initializeCards();
         } else {
             alert(`保存GitHub信息时出错：${saveResult.error}`);

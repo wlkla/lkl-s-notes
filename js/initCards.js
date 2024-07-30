@@ -6,6 +6,8 @@ let existingTopics = [];
 
 export async function initializeCards() {
     try {
+        const cardContainer = document.getElementById('cardContainer');
+        cardContainer.innerHTML = '';
         const githubInfo = getGitHubInfo();
         const octokit = new Octokit({
             auth: githubInfo.userToken
@@ -20,7 +22,6 @@ export async function initializeCards() {
         });
 
         if (response.status === 200 && Array.isArray(response.data)) {
-            const cardContainer = document.getElementById('cardContainer');
             for (const item of response.data) {
                 if (item.type === 'dir') {
                     existingTopics.push(item.name);
