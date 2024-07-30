@@ -5,6 +5,7 @@
     display: flex;
     overflow: auto;
     scrollbar-width: none;
+    justify-content: center;
     -ms-overflow-style: none;
 }
 

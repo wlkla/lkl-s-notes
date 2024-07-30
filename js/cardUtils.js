@@ -19,8 +19,8 @@ export function createCard(topic) {
                 <span class="topic-name">${topic}</span>
                 <div class="card-options">
                     <div class="card-color-picker-container">
-                        <input type="color" class="card-color-picker-odd" value="#fce38a" title="设置奇数行颜色">
-                        <input type="color" class="card-color-picker-even" value="#f38181" title="设置偶数行颜色">
+                        <input type="color" width="20px" height="20px" style="padding: 0" class="card-color-picker-odd" value="#fce38a" title="设置奇数行颜色">
+                        <input type="color" width="20px" height="20px" style="padding: 0" class="card-color-picker-even" value="#f38181" title="设置偶数行颜色">
                     </div>
                     <button class="card-more-options">⋮</button>
                     <div class="card-menu" style="display: none;">
@@ -294,9 +294,10 @@ async function mergeTopics(sourceCard, targetCard) {
 }
 
 async function moveFileInGitHub(sourceTopic, targetTopic, fileName) {
+    const githubInfo = getGitHubInfo();
+
     const sourcePath = `${githubInfo.filePath}/${sourceTopic}/${fileName}`;
     const targetPath = `${githubInfo.filePath}/${targetTopic}/${fileName}`;
-    const githubInfo = getGitHubInfo();
     const octokit = new Octokit({
         auth: githubInfo.userToken
     });

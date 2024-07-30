@@ -13,7 +13,7 @@
     width: 520px;
     height: 300px;
     display: flex;
-    padding: 20px;
+    padding: 10px;
     margin: 15% auto;
     position: relative;
     align-items: center;
@@ -58,36 +58,39 @@
 }
 
 .card_text {
-    padding: 15px;
-    font-size: 15px;
+    padding: 10px;
+    font-size: 17px;
 }
 
 .card_input {
-    font-size: 15px;
+    font-size: 17px;
     border: none;
-    padding: 15px;
+    padding: 10px;
     background: transparent;
     border-bottom: 2px solid black;
 }
 
-#submit {
+#file_submit {
     z-index: 2;
     color: white;
     border: none;
-    margin-top: 15px;
-    margin-left: 8vw;
+    margin-top: 140px;
     cursor: pointer;
     font-size: 15px;
     transition: 0.3s;
     padding: 10px 20px;
     border-radius: 15px;
     background-color: #003329;
+    position: absolute; /* 绝对定位 */
+    left: 50%; /* 水平居中 */
+    transform: translateX(-50%); /* 将元素的中心对齐到父容器的50%位置 */
 }
 
-#submit:hover {
-    transform: scale(1.1);
+#file_submit:hover {
+    transform: translateX(-50%) scale(1.1); /* 保持居中并放大 */
     background-color: #004d4d;
 }
+
 
 #close {
     top: 7px;
