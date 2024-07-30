@@ -1,0 +1,180 @@
+.card-container {
+    width: 100%;
+    z-index: 4;
+    position: relative;
+    display: flex;
+    overflow: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.card-container::-webkit-scrollbar {
+    display: none;
+}
+
+.card {
+    border: 10px solid white;
+    flex: 0 0 auto;
+    width: 350px;
+    margin-right: 20px;
+    background-color: black;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+    overflow: hidden;
+    position: relative;
+    height: 410px;
+    z-index: 3;
+}
+
+.card:hover {
+    box-shadow: 0 8px 16px rgba(255, 255, 255, 0.5);
+    transform: translateY(-1px);
+}
+
+.card-more {
+    color: white;
+    cursor: pointer;
+    text-align: center;
+}
+
+.card-item {
+    height: 40px;
+    line-height: 30px;
+    display: flex;
+    text-align: center;
+    justify-content: space-between;
+    padding: 5px 10px;
+}
+
+.card-item:nth-child(odd) {
+    background-color: #fce38a;
+}
+
+.card-item:nth-child(even) {
+    background-color: #f38181;
+}
+
+.card-item:hover {
+    filter: brightness(90%);
+}
+
+.card-title {
+    font-size: 1.2em;
+    font-weight: bold;
+    padding: 10px;
+    background-color: black;
+    display: flex;
+    color: white;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.card-close {
+    display: none;
+    cursor: pointer;
+    background: none;
+    border: 1px solid white;
+    padding: 2px;
+    color: white;
+    border-radius: 50%;
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.card-color-picker-container {
+    position: absolute;
+    right: 20px;
+    display: flex;
+    align-items: center;
+}
+
+.card-color-picker-odd,
+.card-color-picker-even {
+    background-color: transparent;
+    width: 15px;
+    height: 20px;
+    border: none;
+    margin-right: 4px;
+    cursor: pointer;
+}
+
+.card-color-picker-even {
+    margin-right: 25px;
+}
+
+.card-options {
+    display: flex;
+    align-items: center;
+}
+
+.card-more-options {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
+    padding: 0 5px;
+}
+
+.card-menu {
+    position: absolute;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 5px 0;
+    z-index: 1000;
+    right: 0;
+    top: 100%;
+}
+
+.card-menu button {
+    display: block;
+    width: 100%;
+    padding: 5px 10px;
+    text-align: left;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.card-menu button:hover {
+    background-color: #f0f0f0;
+}
+
+.drag-handle {
+    position: fixed;
+    cursor: move;
+    color: #888;
+    margin-right: 10px;
+    right: 10px;
+}
+
+.drag-handle-card {
+    position: fixed;
+    cursor: move;
+    color: #888;
+    margin-right: 10px;
+    left: 10px;
+}
+
+.blue-background-class {
+    background-color: #E8F0FE;
+}
+
+.topic-name {
+    outline: none;
+    padding: 2px 5px;
+    border-radius: 3px;
+}
+
+.topic-name:focus {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.file-name {
+    flex-grow: 1;
+    text-align: center;
+}

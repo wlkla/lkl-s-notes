@@ -1,0 +1,109 @@
+.popup {
+    top: 0;
+    left: 0;
+    z-index: 4;
+    width: 100%;
+    height: 100%;
+    display: none;
+    overflow: auto;
+    position: fixed;
+}
+
+.popup-content {
+    width: 520px;
+    height: 300px;
+    display: flex;
+    padding: 20px;
+    margin: 15% auto;
+    position: relative;
+    align-items: center;
+    border-radius: 20px;
+    border: 1px solid #888;
+    flex-direction: column;
+    justify-content: center;
+    background-color: #fefefe;
+}
+
+#_tree, #_leaf, #_plant {
+    position: absolute;
+    width: 100px;
+    height: auto;
+    z-index: 1;
+}
+
+#_plant {
+    width: 521px;
+    height: auto;
+    top: 14px;
+    left: -1px;
+}
+
+#_leaf {
+    width: 521px;
+    height: auto;
+    top: -1px;
+    right: -1px;
+}
+
+#_tree {
+    width: 800px;
+    height: auto;
+    top: -150px;
+    left: -350px;
+}
+
+#uploadForm {
+    z-index: 2;
+    padding: 20px;
+}
+
+.card_text {
+    padding: 15px;
+    font-size: 15px;
+}
+
+.card_input {
+    font-size: 15px;
+    border: none;
+    padding: 15px;
+    background: transparent;
+    border-bottom: 2px solid black;
+}
+
+#submit {
+    z-index: 2;
+    color: white;
+    border: none;
+    margin-top: 15px;
+    margin-left: 8vw;
+    cursor: pointer;
+    font-size: 15px;
+    transition: 0.3s;
+    padding: 10px 20px;
+    border-radius: 15px;
+    background-color: #003329;
+}
+
+#submit:hover {
+    transform: scale(1.1);
+    background-color: #004d4d;
+}
+
+#close {
+    top: 7px;
+    z-index: 2;
+    right: 10px;
+    color: black;
+    font-size: 28px;
+    font-weight: bold;
+    position: absolute;
+    transition: transform 0.3s ease;
+}
+
+#close:hover,
+#close:focus {
+    color: red;
+    cursor: pointer;
+    transform: scale(1.2);
+    text-decoration: none;
+}

@@ -1,0 +1,15 @@
+.cloud {
+    position: absolute;
+    background: transparent;
+    opacity: 0.7;
+    filter: blur(1px);
+}
+
+@keyframes moveClouds {
+    from {
+        transform: translateX(-100vw);
+    }
+    to {
+        transform: translateX(100vw);
+    }
+}

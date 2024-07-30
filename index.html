@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>lkl's notes</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/parallax.css">
+    <link rel="stylesheet" href="css/snow.css">
+    <link rel="stylesheet" href="css/rain.css">
+    <link rel="stylesheet" href="css/cloud.css">
+    <link rel="stylesheet" href="css/upload.css">
+    <link rel="stylesheet" href="css/card.css">
+    <link rel="stylesheet" href="css/popup.css">
+    <link rel="icon" href="img/icon.ico" type="image/x-icon">
+    <link rel="icon" href="img/icon.png" type="image/png">
+    <link rel="apple-touch-icon" href="img/icon.png">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.14.0/Sortable.min.js"></script>
+</head>
+<body>
+<section class="parallax">
+    <img src="img/hill1.png" id="hill1" alt="">
+    <img src="img/hill2.png" id="hill2" alt="">
+    <img src="img/hill3.png" id="hill3" alt="">
+    <img src="img/hill4.png" id="hill4" alt="">
+    <img src="img/hill5.png" id="hill5" alt="">
+    <img src="img/tree.png" id="tree" alt="">
+    <h2 id="text">lkl's notes</h2>
+    <img src="img/leaf.png" id="leaf" alt="">
+    <img src="img/plant.png" id="plant" alt="">
+    <div id="weatherEffect"></div>
+</section>
+
+<section class="sec">
+    <div id="uploadComponent" class="upload-component">
+        <input type="file" id="fileInput" accept=".md" style="display: none;">
+        <button id="uploadButton" class="upload-button">
+            <img src="img/upload.png" class="upload-icon" alt="">上传文件
+        </button>
+    </div>
+    <div id="cardContainer" class="card-container"></div>
+</section>
+
+<div id="popupForm" class="popup">
+    <div class="popup-content">
+        <span id="close">&times;</span>
+        <form id="uploadForm">
+            <div>
+                <label class="card_text" for="topicInput">主题：</label>
+                <input class="card_input" type="text" id="topicInput" name="topic" list="topicList">
+                <datalist id="topicList">
+                </datalist>
+            </div>
+            <div>
+                <label class="card_text" for="fileNameInput">文件名：</label>
+                <input class="card_input" type="text" id="fileNameInput" name="fileName">
+            </div>
+            <div>
+                <label class="card_text" for="noteInput">备注：</label>
+                <input class="card_input" type="text" id="noteInput" name="note">
+            </div>
+            <input id="submit" type="submit" value="Submit">
+        </form>
+        <img src="img/tree.png" id="_tree" alt="">
+        <img src="img/leaf.png" id="_leaf" alt="">
+        <img src="img/plant.png" id="_plant" alt="">
+    </div>
+</div>
+
+<script type="module" src="js/main.js"></script>
+</body>
+</html>

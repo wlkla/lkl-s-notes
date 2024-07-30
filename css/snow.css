@@ -1,0 +1,6 @@
+.snowflake {
+    position: absolute;
+    color: #fff;
+    pointer-events: none;
+    user-select: none;
+}

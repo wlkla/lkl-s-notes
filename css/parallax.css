@@ -1,0 +1,33 @@
+.parallax {
+    display: flex;
+    height: 100vh;
+    position: relative;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+#leaf {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 2;
+}
+
+#hill1, #hill2, #hill3, #hill4, #hill5, #tree, #plant {
+    position: absolute;
+    width: 100%;
+    bottom: 0;
+    left: 0;
+}
+
+#text {
+    color: #fff;
+    font-size: 5vw;
+    position: absolute;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, .2);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
