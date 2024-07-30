@@ -7,7 +7,7 @@
     box-sizing: border-box;
     scroll-snap-type: x mandatory;
 }
-
+.card::-webkit-scrollbar,
 .card-container::-webkit-scrollbar {
     display: none;
 }
@@ -20,7 +20,7 @@
     background-color: black;
     border-radius: 10px;
     transition: all 0.3s ease;
-    overflow: hidden;
+    overflow: auto;
     position: relative;
     height: 410px;
     z-index: 3;

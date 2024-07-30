@@ -275,13 +275,19 @@ async function mergeTopics(sourceCard, targetCard) {
     const sourceTopic = sourceCard.getAttribute('data-topic');
     const targetTopic = targetCard.getAttribute('data-topic');
 
-    while (sourceContent.firstChild) {
+    const targetItems = Array.from(targetContent.querySelectorAll('.card-item'));
+    const availableSlots = Math.max(0, showNum - targetItems.length);
+
+    let movedCount = 0;
+
+    while (sourceContent.firstChild && movedCount < availableSlots) {
         const item = sourceContent.firstChild;
         const fileName = item.querySelector('.file-name').textContent;
         if (!isFileNameDuplicate(fileName, targetCard)) {
             try {
                 await moveFileInGitHub(sourceTopic, targetTopic, fileName);
                 targetContent.appendChild(item);
+                movedCount++;
             } catch (error) {
                 alert(`移动文件 "${fileName}" 失败：${error.message}`);
                 sourceContent.removeChild(item);
@@ -292,8 +298,43 @@ async function mergeTopics(sourceCard, targetCard) {
         }
     }
 
-    updateCardItemColors(targetCard);
+    // Handle remaining items in sourceContent
+    while (sourceContent.firstChild) {
+        const item = sourceContent.firstChild;
+        const fileName = item.querySelector('.file-name').textContent;
+        try {
+            await moveFileInGitHub(sourceTopic, targetTopic, fileName);
+            // Instead of appending to targetContent, we'll just remove it from sourceContent
+            sourceContent.removeChild(item);
+        } catch (error) {
+            alert(`移动文件 "${fileName}" 失败：${error.message}`);
+            sourceContent.removeChild(item);
+        }
+    }
+
     sourceCard.remove();
+    updateCardItemColors(targetCard);
+    updateCardVisibility(targetCard);
+}
+
+function updateCardVisibility(card) {
+    const content = card.querySelector('.card-content');
+    const items = Array.from(content.querySelectorAll('.card-item'));
+    const cardMore = card.querySelector('.card-more');
+
+    items.forEach((item, index) => {
+        if (index < showNum) {
+            item.style.display = 'flex';
+        } else {
+            item.style.display = 'none';
+        }
+    });
+
+    if (items.length > showNum) {
+        cardMore.style.display = 'block';
+    } else {
+        cardMore.style.display = 'none';
+    }
 }
 
 async function moveFileInGitHub(sourceTopic, targetTopic, fileName) {
