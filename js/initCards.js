@@ -1,16 +1,18 @@
 import {Octokit} from "https://esm.sh/@octokit/core";
 import {createCard, addFileToCard} from './cardUtils.js';
+import {getGitHubInfo} from './github.js';
 
-const octokit = new Octokit({
-    auth: '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'
-});
 
 export async function initializeCards() {
     try {
+        const githubInfo = getGitHubInfo();
+        const octokit = new Octokit({
+            auth: githubInfo.userToken
+        });
         const response = await octokit.request('GET /repos/{owner}/{repo}/contents/{path}', {
-            owner: 'wlkla',
-            repo: 'lkl-s-notes',
-            path: 'doc',
+            owner: githubInfo.username,
+            repo: githubInfo.repoName,
+            path: githubInfo.filePath,
             headers: {
                 'X-GitHub-Api-Version': '2022-11-28'
             }
@@ -37,10 +39,14 @@ export async function initializeCards() {
 
 async function populateCard(card, topicName) {
     try {
+        const githubInfo = getGitHubInfo();
+        const octokit = new Octokit({
+            auth: githubInfo.userToken
+        });
         const response = await octokit.request('GET /repos/{owner}/{repo}/contents/{path}', {
-            owner: 'wlkla',
-            repo: 'lkl-s-notes',
-            path: `doc/${topicName}`,
+            owner: githubInfo.username,
+            repo: githubInfo.repoName,
+            path: `${githubInfo.filePath}/${topicName}`,
             headers: {
                 'X-GitHub-Api-Version': '2022-11-28'
             }

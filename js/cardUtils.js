@@ -1,12 +1,15 @@
 import {openMarkdownFile} from './markdown.js';
 import {Octokit} from 'https://cdn.skypack.dev/@octokit/core';
+import {getGitHubInfo} from './github.js';
 
 const showNum = 8;
-const octokit = new Octokit({
-    auth: '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'
-});
+
 
 export function createCard(topic) {
+    const githubInfo = getGitHubInfo();
+    const octokit = new Octokit({
+        auth: githubInfo.userToken
+    });
     const card = document.createElement('div');
     card.className = 'card';
     card.setAttribute('data-topic', topic);
@@ -191,7 +194,7 @@ export function addFileToCard(card, topic, fileName) {
     content.appendChild(item);
 
     item.querySelector('.file-name').addEventListener('click', function () {
-        openMarkdownFile(topic,fileName);
+        openMarkdownFile(topic, fileName);
     });
 
     updateCardItemColors(card);
@@ -208,10 +211,7 @@ export function addFileToCard(card, topic, fileName) {
 function setupDragAndDropCard(card) {
     const content = card.querySelector('.card-content');
     new Sortable(content, {
-        animation: 150,
-        handle: '.drag-handle',
-        ghostClass: 'blue-background-class',
-        onSort: function () {
+        animation: 150, handle: '.drag-handle', ghostClass: 'blue-background-class', onSort: function () {
             updateCardItemColors(card);
         }
     });
@@ -294,21 +294,26 @@ async function mergeTopics(sourceCard, targetCard) {
 }
 
 async function moveFileInGitHub(sourceTopic, targetTopic, fileName) {
-    const sourcePath = `doc/${sourceTopic}/${fileName}`;
-    const targetPath = `doc/${targetTopic}/${fileName}`;
+    const sourcePath = `${githubInfo.filePath}/${sourceTopic}/${fileName}`;
+    const targetPath = `${githubInfo.filePath}/${targetTopic}/${fileName}`;
+    const githubInfo = getGitHubInfo();
+    const octokit = new Octokit({
+        auth: githubInfo.userToken
+    });
 
     // 获取源文件内容
+    // 获取源文件内容
     const {data: sourceFile} = await octokit.request('GET /repos/{owner}/{repo}/contents/{path}', {
-        owner: 'wlkla',
-        repo: 'lkl-s-notes',
+        owner: githubInfo.username,
+        repo: githubInfo.repoName,
         path: sourcePath,
         headers: {'X-GitHub-Api-Version': '2022-11-28'}
     });
 
     // 创建文件在新位置
     await octokit.request('PUT /repos/{owner}/{repo}/contents/{path}', {
-        owner: 'wlkla',
-        repo: 'lkl-s-notes',
+        owner: githubInfo.username,
+        repo: githubInfo.repoName,
         path: targetPath,
         message: `Move ${fileName} from ${sourceTopic} to ${targetTopic}`,
         content: sourceFile.content,
@@ -317,8 +322,8 @@ async function moveFileInGitHub(sourceTopic, targetTopic, fileName) {
 
     // 删除原位置的文件
     await octokit.request('DELETE /repos/{owner}/{repo}/contents/{path}', {
-        owner: 'wlkla',
-        repo: 'lkl-s-notes',
+        owner: githubInfo.username,
+        repo: githubInfo.repoName,
         path: sourcePath,
         message: `Remove ${fileName} from ${sourceTopic}`,
         sha: sourceFile.sha,
@@ -327,12 +332,16 @@ async function moveFileInGitHub(sourceTopic, targetTopic, fileName) {
 }
 
 async function deleteTopicFolderInGitHub(topic) {
-    const path = `doc/${topic}`;
+    const githubInfo = getGitHubInfo();
+    const path = `${githubInfo.filePath}/${topic}`;
+    const octokit = new Octokit({
+        auth: githubInfo.userToken
+    });
 
     // 获取文件夹内容
     const {data: contents} = await octokit.request('GET /repos/{owner}/{repo}/contents/{path}', {
-        owner: 'wlkla',
-        repo: 'lkl-s-notes',
+        owner: githubInfo.username,
+        repo: githubInfo.repoName,
         path: path,
         headers: {'X-GitHub-Api-Version': '2022-11-28'}
     });
@@ -340,8 +349,8 @@ async function deleteTopicFolderInGitHub(topic) {
     // 删除文件夹内的所有文件
     for (const file of contents) {
         await octokit.request('DELETE /repos/{owner}/{repo}/contents/{path}', {
-            owner: 'wlkla',
-            repo: 'lkl-s-notes',
+            owner: githubInfo.username,
+            repo: githubInfo.repoName,
             path: file.path,
             message: `Delete ${file.name} as part of removing ${topic}`,
             sha: file.sha,
@@ -351,13 +360,17 @@ async function deleteTopicFolderInGitHub(topic) {
 }
 
 async function renameTopicFolderInGitHub(oldTopic, newTopic) {
-    const oldPath = `doc/${oldTopic}`;
-    const newPath = `doc/${newTopic}`;
+    const githubInfo = getGitHubInfo();
+    const oldPath = `${githubInfo.filePath}/${oldTopic}`;
+    const newPath = `${githubInfo.filePath}/${newTopic}`;
+    const octokit = new Octokit({
+        auth: githubInfo.userToken
+    });
 
     // 获取旧文件夹内容
     const {data: contents} = await octokit.request('GET /repos/{owner}/{repo}/contents/{path}', {
-        owner: 'wlkla',
-        repo: 'lkl-s-notes',
+        owner: githubInfo.username,
+        repo: githubInfo.repoName,
         path: oldPath,
         headers: {'X-GitHub-Api-Version': '2022-11-28'}
     });
@@ -369,16 +382,16 @@ async function renameTopicFolderInGitHub(oldTopic, newTopic) {
 
         // 获取文件内容
         const {data: fileContent} = await octokit.request('GET /repos/{owner}/{repo}/contents/{path}', {
-            owner: 'wlkla',
-            repo: 'lkl-s-notes',
+            owner: githubInfo.username,
+            repo: githubInfo.repoName,
             path: oldFilePath,
             headers: {'X-GitHub-Api-Version': '2022-11-28'}
         });
 
         // 在新位置创建文件
         await octokit.request('PUT /repos/{owner}/{repo}/contents/{path}', {
-            owner: 'wlkla',
-            repo: 'lkl-s-notes',
+            owner: githubInfo.username,
+            repo: githubInfo.repoName,
             path: newFilePath,
             message: `Move ${file.name} from ${oldTopic} to ${newTopic}`,
             content: fileContent.content,
@@ -387,8 +400,8 @@ async function renameTopicFolderInGitHub(oldTopic, newTopic) {
 
         // 删除旧位置的文件
         await octokit.request('DELETE /repos/{owner}/{repo}/contents/{path}', {
-            owner: 'wlkla',
-            repo: 'lkl-s-notes',
+            owner: githubInfo.username,
+            repo: githubInfo.repoName,
             path: oldFilePath,
             message: `Remove ${file.name} from ${oldTopic}`,
             sha: file.sha,

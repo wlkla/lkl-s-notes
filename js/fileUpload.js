@@ -1,5 +1,7 @@
 import {createCard, addFileToCard} from './cardUtils.js';
 import {Octokit} from 'https://cdn.skypack.dev/@octokit/core';
+import {getGitHubInfo} from './github.js';
+
 
 export function setupFileUpload() {
     const closeButton = document.getElementById('close');
@@ -117,16 +119,17 @@ export function setupFileUpload() {
     }
 
     async function uploadFileToGitHub(topic, fileName, content) {
+        const githubInfo = getGitHubInfo();
         const octokit = new Octokit({
-            auth: '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'
+            auth: githubInfo.userToken
         });
 
-        const path = `doc/${topic}/${fileName}`;
+        const path = `${githubInfo.filePath}/${topic}/${fileName}`;
 
         try {
             await octokit.request('PUT /repos/{owner}/{repo}/contents/{path}', {
-                owner: 'wlkla',
-                repo: 'lkl-s-notes',
+                owner: githubInfo.username,
+                repo: githubInfo.repoName,
                 path: path,
                 message: `Add ${fileName} to ${topic}`,
                 content: content,

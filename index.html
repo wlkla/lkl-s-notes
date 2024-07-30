@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="css/upload.css">
     <link rel="stylesheet" href="css/card.css">
     <link rel="stylesheet" href="css/popup.css">
+    <link rel="stylesheet" href="css/github.css">
     <link rel="icon" href="img/icon.ico" type="image/x-icon">
     <link rel="icon" href="img/icon.png" type="image/png">
     <link rel="apple-touch-icon" href="img/icon.png">
@@ -20,6 +21,9 @@
 </head>
 <body>
 <section class="parallax">
+    <button id="githubBindBtn" class="github-bind-btn">
+        <img src="img/github.png" class="github" alt="">
+    </button>
     <img src="img/hill1.png" id="hill1" alt="">
     <img src="img/hill2.png" id="hill2" alt="">
     <img src="img/hill3.png" id="hill3" alt="">
@@ -65,6 +69,28 @@
         <img src="img/tree.png" id="_tree" alt="">
         <img src="img/leaf.png" id="_leaf" alt="">
         <img src="img/plant.png" id="_plant" alt="">
+    </div>
+</div>
+
+<div id="githubBindModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <img src="img/github.png" class="github" alt="">
+        <form id="githubBindForm">
+            <label for="userToken">用户密钥:</label>
+            <input class="github-input" type="password" id="userToken" required>
+
+            <label for="username">用户名:</label>
+            <input class="github-input" type="text" id="username" required>
+
+            <label for="repoName">仓库名:</label>
+            <input class="github-input" type="text" id="repoName" required>
+
+            <label for="filePath">文件路径:</label>
+            <input class="github-input" type="text" id="filePath" required>
+
+            <button type="submit">确定</button>
+        </form>
     </div>
 </div>
 

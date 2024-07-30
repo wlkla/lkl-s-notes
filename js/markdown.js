@@ -3,9 +3,8 @@
 export function openMarkdownFile(topic, fileName) {
     const fileUrl = `https://raw.githubusercontent.com/wlkla/lkl-s-notes/main/doc/${topic}/${fileName}`;
     console.log(fileUrl);
-    const pageUrl = `https://lkl.us.kg/${topic}/${fileName}`;
 
-    const newWindow = window.open(pageUrl, '_blank');
+    const newWindow = window.open('', '_blank');
 
     fetch(fileUrl)
         .then(response => response.text())
