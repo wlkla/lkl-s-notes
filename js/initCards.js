@@ -67,6 +67,6 @@ async function populateCard(card, topicName) {
     }
 }
 
-export function getTopics(){
+export function getTopics() {
     return existingTopics;
 }

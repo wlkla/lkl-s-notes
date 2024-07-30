@@ -1,12 +1,11 @@
 .card-container {
     width: 100%;
-    z-index: 4;
-    position: relative;
     display: flex;
-    overflow: auto;
-    scrollbar-width: none;
-    justify-content: center;
-    -ms-overflow-style: none;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding-left: 20px;
+    box-sizing: border-box;
+    scroll-snap-type: x mandatory;
 }
 
 .card-container::-webkit-scrollbar {
