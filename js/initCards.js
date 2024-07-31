@@ -66,7 +66,3 @@ async function populateCard(card, topicName) {
         console.error(`Error populating card for ${topicName}:`, error);
     }
 }
-
-export function getTopics() {
-    return existingTopics;
-}
