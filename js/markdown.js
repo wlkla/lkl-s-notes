@@ -1,5 +1,9 @@
+import {Octokit} from "https://ems.sh/@octokit/core";
+import {getGitHubInfo} from './github.js';
+
 export function openMarkdownFile(topic, fileName) {
-    const fileUrl = `https://raw.githubusercontent.com/wlkla/lkl-s-notes/main/doc/${topic}/${fileName}`;
+    const githubInfo = getGitHubInfo();
+    const fileUrl = `https://raw.githubusercontent.com/${githubInfo.username}/${githubInfo.repoName}/main/${githubInfo.filePath}/${topic}/${fileName}`;
     console.log(fileUrl);
 
     const newWindow = window.open('', '_blank');
