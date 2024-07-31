@@ -2,11 +2,16 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
 
+@font-face {
+    font-family: 'STXINWEI';
+    src: url('../STXINWEI.TTF') format('truetype');
+}
+
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 华文新魏, serif;
+    font-family: 'STXINWEI', serif;
 }
 
 ::selection {
