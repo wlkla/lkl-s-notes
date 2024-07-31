@@ -1,4 +1,3 @@
-import {Octokit} from "https://ems.sh/@octokit/core";
 import {getGitHubInfo} from './github.js';
 
 export function openMarkdownFile(topic, fileName) {
