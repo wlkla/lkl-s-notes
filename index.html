@@ -18,6 +18,7 @@
     <link rel="icon" href="img/icon.png" type="image/png">
     <link rel="apple-touch-icon" href="img/icon.png">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.14.0/Sortable.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 </head>
 <body>
 <section class="parallax">
@@ -52,8 +53,7 @@
         <form id="uploadForm">
             <div>
                 <label class="card_text" for="topicInput">主<span style="color: transparent">啊</span>题：</label>
-                <input class="card_input" type="text" id="topicInput" name="topic" list="topicList">
-                <datalist id="topicList"></datalist>
+                <input class="card_input" type="text" id="topicInput" name="topic" autocomplete="off">
             </div>
             <div>
                 <label class="card_text" for="fileNameInput">文件名：</label>
@@ -61,7 +61,7 @@
             </div>
             <div>
                 <label class="card_text" for="noteInput">备<span style="color: transparent">啊</span>注：</label>
-                <input class="card_input" type="text" id="noteInput" name="note">
+                <input class="card_input" type="text" id="noteInput" name="note" autocomplete="off">
             </div>
             <input id="file_submit" type="submit" value="Submit">
         </form>

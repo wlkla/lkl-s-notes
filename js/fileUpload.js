@@ -1,7 +1,6 @@
 import {createCard, addFileToCard} from './cardUtils.js';
 import {Octokit} from 'https://cdn.skypack.dev/@octokit/core';
 import {getGitHubInfo} from './github.js';
-import {getTopics} from './initCards.js';
 
 export function setupFileUpload() {
     const closeButton = document.getElementById('close');
@@ -10,14 +9,11 @@ export function setupFileUpload() {
     const uploadButton = document.getElementById('uploadButton');
     const uploadForm = document.getElementById('uploadForm');
     const popupForm = document.getElementById('popupForm');
-    const topicInput = document.getElementById('topicInput');
-    const topicList = document.getElementById('topicList');
     const cardContainer = document.getElementById('cardContainer');
     let selectedFile = null;
-    let existingTopics = [];
 
     closeButton.addEventListener("click", function () {
-        popupForm.style.display = "none";
+        resetPopupForm();
     });
 
     uploadButton.addEventListener('click', function () {
@@ -56,7 +52,7 @@ export function setupFileUpload() {
                 droppedFile.file = file;
                 uploadComponent.appendChild(droppedFile);
 
-                popupForm.style.display = 'block';
+                showPopupForm();
             } else {
                 alert('请上传Markdown文件！');
             }
@@ -65,11 +61,9 @@ export function setupFileUpload() {
 
     fileInput.addEventListener('change', function (e) {
         selectedFile = e.target.files[0];
-        updateTopicList();
         if (selectedFile) {
-            existingTopics = getTopics();
             document.getElementById('fileNameInput').value = selectedFile.name;
-            popupForm.style.display = 'block';
+            showPopupForm();
         }
     });
 
@@ -103,33 +97,26 @@ export function setupFileUpload() {
             if (!card) {
                 card = createCard(topic);
                 cardContainer.appendChild(card);
-                existingTopics.push(topic);
-                existingTopics.push(topic);
             }
 
             addFileToCard(card, topic, fileName);
-            popupForm.style.display = 'none';
-            uploadForm.reset();
-            selectedFile = null; // 重置选中的文件
+            resetPopupForm();
         } catch (error) {
             alert('上传失败：' + error.message);
         }
     });
 
-    topicInput.addEventListener('input', function () {
-        const searchTerm = topicInput.value.toLowerCase();
-        updateTopicList(searchTerm);
-    });
+    function showPopupForm() {
+        popupForm.style.display = 'block';
+    }
 
-    function updateTopicList(searchTerm = '') {
-        topicList.innerHTML = '';
-        existingTopics
-            .filter(topic => topic.toLowerCase().includes(searchTerm))
-            .forEach(topic => {
-                const option = document.createElement('option');
-                option.value = topic;
-                topicList.appendChild(option);
-            });
+    function resetPopupForm() {
+        popupForm.style.display = 'none';
+        uploadForm.reset();
+        selectedFile = null;
+        // 清除拖放的文件
+        const droppedFiles = uploadComponent.querySelectorAll('.dropped-file');
+        droppedFiles.forEach(file => file.remove());
     }
 
     async function readFileAsBase64(file) {

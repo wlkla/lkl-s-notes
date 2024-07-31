@@ -6,13 +6,13 @@
     padding-left: 20px;
     box-sizing: border-box;
     scroll-snap-type: x mandatory;
-}
-.card::-webkit-scrollbar,
-.card-container::-webkit-scrollbar {
-    display: none;
+    justify-content: space-around;
 }
 
 .card {
+    display: flex;
+    flex-direction: column;
+    overflow-y: hidden;
     border: 10px solid white;
     flex: 0 0 auto;
     width: 350px;
@@ -20,21 +20,47 @@
     background-color: black;
     border-radius: 10px;
     transition: all 0.3s ease;
-    overflow: auto;
+    overflow-x: hidden;
     position: relative;
     height: 410px;
     z-index: 3;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.card-content::-webkit-scrollbar,
+.card-container::-webkit-scrollbar,
+.card::-webkit-scrollbar {
+    width: 0;
+    background: transparent;
+}
+
+.card-content {
+    flex-grow: 1;
+    overflow-y: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.card-toggle {
+    cursor: pointer;
+    background: none;
+    border: none;
+    color: white;
+    font-size: 20px;
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.card-toggle:hover {
+    color: #ccc;
 }
 
 .card:hover {
     box-shadow: 0 8px 16px rgba(255, 255, 255, 0.5);
     transform: translateY(-1px);
-}
-
-.card-more {
-    color: white;
-    cursor: pointer;
-    text-align: center;
 }
 
 .card-item {
@@ -44,6 +70,7 @@
     text-align: center;
     justify-content: space-between;
     padding: 5px 10px;
+    align-items: center;
 }
 
 .card-item:nth-child(odd) {
@@ -59,29 +86,18 @@
 }
 
 .card-title {
+    position: sticky;
+    top: 0;
+    z-index: 10;
     font-size: 1.2em;
     font-weight: bold;
-    padding: 10px;
     background-color: black;
     display: flex;
     color: white;
     align-items: center;
-    justify-content: center;
-    position: relative;
-}
+    justify-content: left;
+    padding: 10px 10px 10px 30px;
 
-.card-close {
-    display: none;
-    cursor: pointer;
-    background: none;
-    border: 1px solid white;
-    padding: 2px;
-    color: white;
-    border-radius: 50%;
-    position: absolute;
-    right: 15px;
-    top: 50%;
-    transform: translateY(-50%);
 }
 
 .card-color-picker-container {
@@ -170,11 +186,9 @@
 }
 
 .drag-handle {
-    position: fixed;
     cursor: move;
     color: #888;
-    margin-right: 10px;
-    right: 10px;
+    margin-left: 10px;
 }
 
 .drag-handle-card {

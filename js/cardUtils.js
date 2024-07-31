@@ -15,12 +15,12 @@ export function createCard(topic) {
     card.setAttribute('data-topic', topic);
     card.innerHTML = `
             <div class="card-title">
-            <span class="drag-handle-card">⋮⋮</span>
+                <span class="drag-handle-card">⋮⋮</span>
                 <span class="topic-name">${topic}</span>
                 <div class="card-options">
                     <div class="card-color-picker-container">
-                        <input type="color" width="20px" height="20px" style="padding: 0" class="card-color-picker-odd" value="#fce38a" title="设置奇数行颜色">
-                        <input type="color" width="20px" height="20px" style="padding: 0" class="card-color-picker-even" value="#f38181" title="设置偶数行颜色">
+                        <input type="color" width="20px" height="20px" style="padding: 0" class="card-color-picker-odd" value="#fbfdeb" title="设置奇数行颜色">
+                        <input type="color" width="20px" height="20px" style="padding: 0" class="card-color-picker-even" value="#93dfd5" title="设置偶数行颜色">
                     </div>
                     <button class="card-more-options">⋮</button>
                     <div class="card-menu" style="display: none;">
@@ -30,63 +30,16 @@ export function createCard(topic) {
                         <div class="merge-submenu" style="display: none;"></div>
                     </div>
                 </div>
-                <button class="card-close" style="display: none">&times;</button>
+                <button class="card-toggle">
+                    <i class="fas fa-expand"></i>
+                </button>
             </div>
             <div class="card-content"></div>
-            <div class="card-more">...</div>
         `;
 
-    card.querySelector('.card-more').addEventListener('click', function () {
-        card.classList.toggle('card-fullscreen');
-        if (card.classList.contains('card-fullscreen')) {
-            card.style.width = '80%';
-            card.style.height = '90%';
-            card.style.position = 'fixed';
-            card.style.top = '50%';
-            card.style.left = '50%';
-            card.style.transform = 'translate(-50%, -50%)';
-            card.style.overflow = 'auto'; // Add this line to enable scrolling
-            card.querySelector('.card-more').style.display = 'none';
-            card.querySelector('.card-close').style.display = 'block';
-            card.querySelector('.drag-handle-card').style.display = 'none';
-            const items = Array.from(card.querySelectorAll('.card-item'));
-            items.forEach(item => item.style.display = 'flex');
-        } else {
-            card.style.width = '';
-            card.style.height = '';
-            card.style.position = '';
-            card.style.top = '';
-            card.style.left = '';
-            card.style.transform = '';
-            card.style.overflow = '';
-            card.querySelector('.card-more').style.display = 'block';
-            card.querySelector('.card-close').style.display = 'none';
-            card.querySelector('.drag-handle-card').style.display = 'block';
-            const items = Array.from(card.querySelectorAll('.card-item'));
-            for (let i = showNum; i < items.length; i++) {
-                items[i].style.display = 'none';
-            }
-        }
-    });
-
-    card.querySelector('.card-close').addEventListener('click', function (e) {
-        e.stopPropagation();
-        if (card.classList.contains('card-fullscreen')) {
-            card.classList.remove('card-fullscreen');
-            card.style.width = '';
-            card.style.height = '';
-            card.style.position = '';
-            card.style.top = '';
-            card.style.left = '';
-            card.style.transform = '';
-            card.querySelector('.card-more').style.display = 'block';
-            card.querySelector('.card-close').style.display = 'none';
-            card.querySelector('.drag-handle-card').style.display = 'block';
-            const items = Array.from(card.querySelectorAll('.card-item'));
-            for (let i = showNum; i < items.length; i++) {
-                items[i].style.display = 'none';
-            }
-        }
+    const toggleButton = card.querySelector('.card-toggle');
+    toggleButton.addEventListener('click', function () {
+        toggleCardSize(card);
     });
 
     const moreOptionsButton = card.querySelector('.card-more-options');
@@ -182,6 +135,32 @@ export function createCard(topic) {
     return card;
 }
 
+function toggleCardSize(card) {
+    card.classList.toggle('card-fullscreen');
+    const icon = card.querySelector('.card-toggle i');
+    if (card.classList.contains('card-fullscreen')) {
+        card.style.width = '80%';
+        card.style.height = '90%';
+        card.style.position = 'fixed';
+        card.style.top = '50%';
+        card.style.left = '50%';
+        card.style.transform = 'translate(-50%, -50%)';
+        card.querySelector('.drag-handle-card').style.display = 'none';
+        icon.classList.remove('fa-expand');
+        icon.classList.add('fa-compress');
+    } else {
+        card.style.width = '';
+        card.style.height = '';
+        card.style.position = '';
+        card.style.top = '';
+        card.style.left = '';
+        card.style.transform = '';
+        card.querySelector('.drag-handle-card').style.display = 'block';
+        icon.classList.remove('fa-compress');
+        icon.classList.add('fa-expand');
+    }
+}
+
 export function addFileToCard(card, topic, fileName) {
     const content = card.querySelector('.card-content');
     if (isFileNameDuplicate(fileName, card)) {
@@ -201,14 +180,6 @@ export function addFileToCard(card, topic, fileName) {
     });
 
     updateCardItemColors(card);
-
-    const items = Array.from(content.querySelectorAll('.card-item'));
-    if (items.length > showNum) {
-        for (let i = showNum; i < items.length; i++) {
-            items[i].style.display = 'none';
-        }
-        card.querySelector('.card-more').style.display = 'block';
-    }
 }
 
 function setupDragAndDropCard(card) {
@@ -274,67 +245,26 @@ async function mergeTopics(sourceCard, targetCard) {
     const targetContent = targetCard.querySelector('.card-content');
     const sourceTopic = sourceCard.getAttribute('data-topic');
     const targetTopic = targetCard.getAttribute('data-topic');
+    const items = Array.from(sourceContent.children);
 
-    const targetItems = Array.from(targetContent.querySelectorAll('.card-item'));
-    const availableSlots = Math.max(0, showNum - targetItems.length);
-
-    let movedCount = 0;
-
-    while (sourceContent.firstChild && movedCount < availableSlots) {
-        const item = sourceContent.firstChild;
+    for (const item of items) {
         const fileName = item.querySelector('.file-name').textContent;
         if (!isFileNameDuplicate(fileName, targetCard)) {
             try {
                 await moveFileInGitHub(sourceTopic, targetTopic, fileName);
                 targetContent.appendChild(item);
-                movedCount++;
             } catch (error) {
-                alert(`移动文件 "${fileName}" 失败：${error.message}`);
-                sourceContent.removeChild(item);
+                console.error(`移动文件 "${fileName}" 失败：${error.message}`);
             }
         } else {
-            alert(`文件 "${fileName}" 在目标主题中已存在，将被跳过。`);
-            sourceContent.removeChild(item);
+            console.warn(`文件 "${fileName}" 在目标主题中已存在，将被跳过。`);
         }
     }
 
-    // Handle remaining items in sourceContent
-    while (sourceContent.firstChild) {
-        const item = sourceContent.firstChild;
-        const fileName = item.querySelector('.file-name').textContent;
-        try {
-            await moveFileInGitHub(sourceTopic, targetTopic, fileName);
-            // Instead of appending to targetContent, we'll just remove it from sourceContent
-            sourceContent.removeChild(item);
-        } catch (error) {
-            alert(`移动文件 "${fileName}" 失败：${error.message}`);
-            sourceContent.removeChild(item);
-        }
+    if (sourceContent.children.length === 0) {
+        sourceCard.remove();
     }
-
-    sourceCard.remove();
     updateCardItemColors(targetCard);
-    updateCardVisibility(targetCard);
-}
-
-function updateCardVisibility(card) {
-    const content = card.querySelector('.card-content');
-    const items = Array.from(content.querySelectorAll('.card-item'));
-    const cardMore = card.querySelector('.card-more');
-
-    items.forEach((item, index) => {
-        if (index < showNum) {
-            item.style.display = 'flex';
-        } else {
-            item.style.display = 'none';
-        }
-    });
-
-    if (items.length > showNum) {
-        cardMore.style.display = 'block';
-    } else {
-        cardMore.style.display = 'none';
-    }
 }
 
 async function moveFileInGitHub(sourceTopic, targetTopic, fileName) {
@@ -346,7 +276,6 @@ async function moveFileInGitHub(sourceTopic, targetTopic, fileName) {
         auth: githubInfo.userToken
     });
 
-    // 获取源文件内容
     // 获取源文件内容
     const {data: sourceFile} = await octokit.request('GET /repos/{owner}/{repo}/contents/{path}', {
         owner: githubInfo.username,
