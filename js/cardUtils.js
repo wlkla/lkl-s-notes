@@ -2,9 +2,6 @@ import {openMarkdownFile} from './markdown.js';
 import {Octokit} from 'https://cdn.skypack.dev/@octokit/core';
 import {getGitHubInfo} from './github.js';
 
-const showNum = 8;
-
-
 export function createCard(topic) {
     const githubInfo = getGitHubInfo();
     const octokit = new Octokit({
@@ -59,8 +56,8 @@ export function createCard(topic) {
     deleteTopicButton.addEventListener('click', async function () {
         if (confirm('确定要删除这个主题吗？')) {
             try {
-                await deleteTopicFolderInGitHub(topic);
                 card.remove();
+                await deleteTopicFolderInGitHub(topic);
             } catch (error) {
                 alert(`删除主题失败：${error.message}`);
             }
@@ -175,18 +172,65 @@ export function addFileToCard(card, topic, fileName) {
         `;
     content.appendChild(item);
 
-    item.querySelector('.file-name').addEventListener('click', function () {
-        openMarkdownFile(topic, fileName);
-    });
+    // 为文件名元素添加点击事件处理程序
+    setFileNameClickHandler(item.querySelector('.file-name'), topic, fileName);
 
     updateCardItemColors(card);
+}
+
+function setFileNameClickHandler(element, topic, fileName) {
+    // 移除所有旧的点击事件处理程序
+    const oldHandler = element._clickHandler;
+    if (oldHandler) {
+        element.removeEventListener('click', oldHandler);
+    }
+
+    // 创建新的点击事件处理程序
+    const newHandler = function () {
+        openMarkdownFile(topic, fileName);
+    };
+
+    // 设置并添加新的点击事件处理程序
+    element._clickHandler = newHandler;
+    element.addEventListener('click', newHandler);
 }
 
 function setupDragAndDropCard(card) {
     const content = card.querySelector('.card-content');
     new Sortable(content, {
-        animation: 150, handle: '.drag-handle', ghostClass: 'blue-background-class', onSort: function () {
-            updateCardItemColors(card);
+        group: 'shared', // 允许在同一组之间的卡片元素拖动
+        animation: 150,
+        handle: '.drag-handle',
+        ghostClass: 'blue-background-class',
+        onEnd: async function (evt) {
+            const oldCard = evt.from.closest('.card');
+            const newCard = evt.to.closest('.card');
+            const fileName = evt.item.querySelector('.file-name').textContent;
+
+            if (oldCard !== newCard) {
+                const oldTopic = oldCard.getAttribute('data-topic');
+                const newTopic = newCard.getAttribute('data-topic');
+
+                try {
+                    await moveFileInGitHub(oldTopic, newTopic, fileName);
+                    console.log(`File "${fileName}" moved from "${oldTopic}" to "${newTopic}".`);
+                    updateCardItemColors(newCard);
+                    updateCardItemColors(oldCard);
+
+                    // 更新文件项的点击事件处理程序
+                    setFileNameClickHandler(evt.item.querySelector('.file-name'), newTopic, fileName);
+                } catch (error) {
+                    console.error(`Failed to move file "${fileName}":`, error);
+
+                    // GitHub 操作失败，回滚 UI 更改
+                    oldCard.querySelector('.card-content').insertBefore(evt.item, oldCard.querySelector('.card-content').children[evt.oldIndex]);
+
+                    // 显示错误信息给用户
+                    alert('文件移动失败，请重试。');
+                }
+            } else {
+                updateCardItemColors(oldCard);
+            }
         }
     });
 }
@@ -264,12 +308,12 @@ async function mergeTopics(sourceCard, targetCard) {
     if (sourceContent.children.length === 0) {
         sourceCard.remove();
     }
+    updateCardItemColors(sourceCard);
     updateCardItemColors(targetCard);
 }
 
 async function moveFileInGitHub(sourceTopic, targetTopic, fileName) {
     const githubInfo = getGitHubInfo();
-
     const sourcePath = `${githubInfo.filePath}/${sourceTopic}/${fileName}`;
     const targetPath = `${githubInfo.filePath}/${targetTopic}/${fileName}`;
     const octokit = new Octokit({
@@ -284,7 +328,7 @@ async function moveFileInGitHub(sourceTopic, targetTopic, fileName) {
         headers: {'X-GitHub-Api-Version': '2022-11-28'}
     });
 
-    // 创建文件在新位置
+    // 在目标路径创建文件
     await octokit.request('PUT /repos/{owner}/{repo}/contents/{path}', {
         owner: githubInfo.username,
         repo: githubInfo.repoName,
@@ -294,7 +338,7 @@ async function moveFileInGitHub(sourceTopic, targetTopic, fileName) {
         headers: {'X-GitHub-Api-Version': '2022-11-28'}
     });
 
-    // 删除原位置的文件
+    // 删除源文件
     await octokit.request('DELETE /repos/{owner}/{repo}/contents/{path}', {
         owner: githubInfo.username,
         repo: githubInfo.repoName,
