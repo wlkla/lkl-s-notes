@@ -10,9 +10,10 @@
 }
 
 .card {
+    resize: both;
     display: flex;
     flex-direction: column;
-    overflow-y: hidden;
+    overflow: auto; /* 改为 auto */
     border: 10px solid white;
     flex: 0 0 auto;
     width: 350px;
@@ -20,26 +21,31 @@
     background-color: black;
     border-radius: 10px;
     transition: all 0.3s ease;
-    overflow-x: hidden;
     position: relative;
     height: 410px;
     z-index: 3;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
+    min-width: 350px;
+    min-height: 200px;
+    max-height: 80vh;
 }
 
 .card-content::-webkit-scrollbar,
 .card-container::-webkit-scrollbar,
 .card::-webkit-scrollbar {
-    width: 0;
+    width: 5px;
     background: transparent;
+}
+
+.card-content::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 3px;
 }
 
 .card-content {
     flex-grow: 1;
     overflow-y: auto;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
+    scrollbar-width: thin;
+    min-height: 0;
 }
 
 .card-toggle {
