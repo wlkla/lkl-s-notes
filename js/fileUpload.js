@@ -12,6 +12,9 @@ export function setupFileUpload() {
     const cardContainer = document.getElementById('cardContainer');
     let selectedFile = null;
 
+    // 更新文件输入元素以接受多种文件类型
+    fileInput.setAttribute('accept', '.md,.txt');
+
     closeButton.addEventListener("click", function () {
         resetPopupForm();
     });
@@ -43,7 +46,7 @@ export function setupFileUpload() {
         const files = e.dataTransfer.files;
         if (files.length > 0) {
             const file = files[0];
-            if (file.type === 'text/markdown' || file.name.endsWith('.md')) {
+            if (isValidFileType(file)) {
                 document.getElementById('fileNameInput').value = file.name;
 
                 // 创建一个元素来存储拖放的文件
@@ -54,16 +57,19 @@ export function setupFileUpload() {
 
                 showPopupForm();
             } else {
-                alert('请上传Markdown文件！');
+                alert('请上传MarkdownF或TXT文件！');
             }
         }
     });
 
     fileInput.addEventListener('change', function (e) {
         selectedFile = e.target.files[0];
-        if (selectedFile) {
+        if (selectedFile && isValidFileType(selectedFile)) {
             document.getElementById('fileNameInput').value = selectedFile.name;
             showPopupForm();
+        } else if (selectedFile) {
+            alert('请上传Markdown或TXT文件！');
+            this.value = '';
         }
     });
 
@@ -117,6 +123,11 @@ export function setupFileUpload() {
         // 清除拖放的文件
         const droppedFiles = uploadComponent.querySelectorAll('.dropped-file');
         droppedFiles.forEach(file => file.remove());
+    }
+
+    function isValidFileType(file) {
+        const validTypes = ['text/markdown', 'text/plain'];
+        return validTypes.includes(file.type) || file.name.endsWith('.md') || file.name.endsWith('.txt');
     }
 
     async function readFileAsBase64(file) {

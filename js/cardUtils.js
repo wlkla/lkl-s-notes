@@ -1,4 +1,4 @@
-import {openMarkdownFile} from './markdown.js';
+import {openFile} from './openfile.js';
 import {Octokit} from 'https://cdn.skypack.dev/@octokit/core';
 import {getGitHubInfo} from './github.js';
 
@@ -187,7 +187,7 @@ function setFileNameClickHandler(element, topic, fileName) {
 
     // 创建新的点击事件处理程序
     const newHandler = function () {
-        openMarkdownFile(topic, fileName);
+        openFile(topic, fileName);
     };
 
     // 设置并添加新的点击事件处理程序
